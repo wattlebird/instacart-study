@@ -11,7 +11,7 @@ orders = pd.read_csv(DATA + '/orders.small.csv', dtype={
         'order_hour_of_day': np.int8,
         'days_since_prior_order': np.float32}, engine='c').\
         rename(columns = {'order_dow': 'order_week', 'order_hour_of_day': 'order_hour', 'days_since_prior_order': 'order_gap'})
-log=pd.read_csv(DATA + '/log.train.small.csv', dtype={
+log=pd.read_csv(DATA + '/log.prior.small.csv', dtype={
             'order_id': np.int32,
             'product_id': np.uint16,
             'add_to_cart_order': np.int16,
