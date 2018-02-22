@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from setting import *
+from scipy.stats import skew
 
 orders = pd.read_csv(DATA + '/orders.small.csv', dtype={
         'order_id': np.int32,
@@ -27,5 +28,7 @@ log_extended['order_number_t-1'] = log_extended.groupby(['product_id', 'user_id'
 
 product_order_number = log_extended[['product_id', 'order_number', 'order_number_t-1']].copy()
 product_order_number['item_order_number_gap'] = product_order_number['order_number']-product_order_number['order_number_t-1']
-product_order_number.groupby('product_id')['item_order_number_gap'].agg(['mean', 'std', 'min', 'max', 'median']).\
-rename(columns={'mean': 'avg'}).add_prefix('item_order_number_gap_').to_csv(DATA+'/item_order_number_gap.csv')
+product_order_number_desc = product_order_number.groupby('product_id')['item_order_number_gap'].\
+agg(['mean', 'std', 'min', 'max', 'median', lambda x: skew(x.dropna().values)])
+product_order_number_desc.columns = ['avg', 'std', 'min', 'max', 'median', 'skew']
+product_order_number_desc.add_prefix('item_order_number_gap_').to_csv(DATA+'/item_order_number_gap.csv')
